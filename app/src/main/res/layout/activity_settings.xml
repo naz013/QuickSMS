@@ -1,0 +1,388 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar_main"/>
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:scrollbars="none"
+    android:id="@+id/background"
+    tools:context="com.hexrain.design.quicksms.SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/enable"
+            android:layout_width="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_toLeftOf="@+id/enableCheck">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/settings_enable_quick_sms"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/enableCheck"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:clickable="false"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout
+            android:id="@+id/dark"
+            android:layout_width="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:layout_toLeftOf="@+id/darkCheck">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/string_dark_theme"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/darkCheck"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:clickable="false"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/string_user_interface"
+            android:textStyle="bold"
+            android:clickable="false"
+            android:textAllCaps="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/themeGroup"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/red_checkbox"
+                android:button="@drawable/red_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/violet_checkbox"
+                android:button="@drawable/violet_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/green_checkbox"
+                android:button="@drawable/green_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/light_green_checkbox"
+                android:button="@drawable/light_green_checkbox"
+                android:layout_margin="5dp"/>
+        </RadioGroup>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/themeGroup2"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/blue_checkbox"
+                android:button="@drawable/blue_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/light_blue_checkbox"
+                android:button="@drawable/light_blue_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/yellow_checkbox"
+                android:button="@drawable/yellow_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/orange_checkbox"
+                android:button="@drawable/orange_checkbox"
+                android:layout_margin="5dp"/>
+
+        </RadioGroup>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/themeGroup3"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/grey_checkbox"
+                android:button="@drawable/grey_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/pink_checkbox"
+                android:button="@drawable/pink_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/sand_checkbox"
+                android:button="@drawable/sand_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/brown_checkbox"
+                android:button="@drawable/brown_checkbox"
+                android:layout_margin="5dp"/>
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/themeGroupPro"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/deepPurple"
+                android:button="@drawable/deep_purple_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/indigoCheckbox"
+                android:button="@drawable/indigo_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/limeCheckbox"
+                android:button="@drawable/lime_checkbox"
+                android:layout_margin="5dp"/>
+
+            <RadioButton
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:id="@+id/deepOrange"
+                android:button="@drawable/deep_orange_checkbox"
+                android:layout_margin="5dp"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/string_other"
+            android:textStyle="bold"
+            android:clickable="false"
+            android:textAllCaps="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/app_name"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:id="@+id/versionName"
+                    android:layout_marginTop="5dp"
+                    android:visibility="visible"
+                    android:text="Version 1.0"
+                     />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/string_open_source"
+            android:id="@+id/thanks"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:text="2015 \u00A9 Nazar Suhovich"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+    </LinearLayout>
+</ScrollView>
+
+    </LinearLayout>

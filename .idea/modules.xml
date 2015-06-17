@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/QuickSMS.iml" filepath="$PROJECT_DIR$/QuickSMS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/floating12/floating12.iml" filepath="$PROJECT_DIR$/floating12/floating12.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-core/lib-core.iml" filepath="$PROJECT_DIR$/lib-core/lib-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-manipulation/lib-manipulation.iml" filepath="$PROJECT_DIR$/lib-manipulation/lib-manipulation.iml" />
+    </modules>
+  </component>
+</project>
+

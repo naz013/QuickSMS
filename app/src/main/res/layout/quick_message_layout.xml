@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/string_send"
+        style="?android:buttonStyle"
+        android:clickable="true"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/buttonSend" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/contactInfo"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:textSize="21sp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contactInfo"
+        android:id="@+id/radioGroup"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/string_type_message"
+            android:id="@+id/text"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/string_template"
+            android:id="@+id/template"/>
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_above="@+id/buttonSend"
+        android:layout_below="@+id/radioGroup"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/customContainer">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textField"
+            android:hint="@string/string_message"
+            android:maxLength="120"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/characters"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/messagesList"
+        android:layout_above="@+id/buttonSend"
+        android:layout_below="@+id/radioGroup"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:choiceMode="singleChoice"
+        android:layout_marginRight="5dp"/>
+
+</RelativeLayout>
