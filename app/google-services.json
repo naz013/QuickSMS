@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "556100491141",
+    "firebase_url": "https://quicksms-ef45d.firebaseio.com",
+    "project_id": "quicksms-ef45d",
+    "storage_bucket": "quicksms-ef45d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556100491141:android:752460cc9a25e839",
+        "android_client_info": {
+          "package_name": "com.hexrain.design.quicksms.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556100491141-lvbm2ul520cs3lon9i4l9gr0ijjhntcs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hexrain.design.quicksms.debug",
+            "certificate_hash": "72773bd49d8a690b87fa39483c44ee176cce9b38"
+          }
+        },
+        {
+          "client_id": "556100491141-ikddqqn8usgafts57s2i85arvv44v9pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXrvQQcDLEvrAmL7e-SWheGCnTCI2jQt0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556100491141-ikddqqn8usgafts57s2i85arvv44v9pt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
