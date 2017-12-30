@@ -9,16 +9,18 @@ import android.telephony.TelephonyManager;
 import com.hexrain.design.quicksms.QuickSMS;
 
 public class Receiver extends BroadcastReceiver {
-    Context mContext;
-    String incoming_nr;
+    private Context mContext;
+    private String incoming_nr;
     private int prev_state;
-    long startCallTime;
+    private long startCallTime;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE); //TelephonyManager object
         CustomPhoneStateListener customPhoneListener = new CustomPhoneStateListener();
-        telephony.listen(customPhoneListener, PhoneStateListener.LISTEN_CALL_STATE); //Register our listener with TelephonyManager
+        if (telephony != null) {
+            telephony.listen(customPhoneListener, PhoneStateListener.LISTEN_CALL_STATE); //Register our listener with TelephonyManager
+        }
         mContext = context;
     }
 

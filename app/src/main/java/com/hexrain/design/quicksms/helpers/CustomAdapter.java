@@ -14,10 +14,9 @@ import com.hexrain.design.quicksms.R;
 
 public class CustomAdapter extends CursorAdapter{
 
-    TextView eventType;
-    LayoutInflater inflater;
-    Context cContext;
-    Cursor c;
+    private LayoutInflater inflater;
+    private Context cContext;
+    private Cursor c;
 
     @SuppressWarnings("deprecation")
     public CustomAdapter(Context context, Cursor c) {
@@ -55,12 +54,12 @@ public class CustomAdapter extends CursorAdapter{
         }
 
         ColorSetter cs = new ColorSetter(cContext);
-        CardView card = (CardView) convertView.findViewById(R.id.card);
+        CardView card = convertView.findViewById(R.id.card);
         card.setCardBackgroundColor(cs.getCardStyle());
 
         Typeface typeface = Typeface.createFromAsset(cContext.getAssets(), "Roboto-Light.ttf");
 
-        eventType = (TextView) convertView.findViewById(R.id.textView);
+        TextView eventType = convertView.findViewById(R.id.textView);
         eventType.setTypeface(typeface);
 
         String message = c.getString(c.getColumnIndex(Constants.COLUMN_TEXT));

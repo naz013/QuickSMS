@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -17,8 +16,7 @@ import com.hexrain.design.quicksms.helpers.SharedPrefs;
 
 public class RateDialog extends Activity {
 
-    TextView buttonRate, rateLater, rateNever;
-    SharedPrefs sharedPrefs;
+    private SharedPrefs sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,33 +30,24 @@ public class RateDialog extends Activity {
 
         sharedPrefs = new SharedPrefs(RateDialog.this);
 
-        buttonRate = (TextView) findViewById(R.id.buttonRate);
-        buttonRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPrefs.saveBoolean(Constants.PREFERENCES_APP_RUNS, true);
-                launchMarket();
-                finish();
-            }
+        TextView buttonRate = findViewById(R.id.buttonRate);
+        buttonRate.setOnClickListener(v -> {
+            sharedPrefs.saveBoolean(Constants.PREFERENCES_APP_RUNS, true);
+            launchMarket();
+            finish();
         });
 
-        rateLater = (TextView) findViewById(R.id.rateLater);
-        rateLater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
-                sharedPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
-                finish();
-            }
+        TextView rateLater = findViewById(R.id.rateLater);
+        rateLater.setOnClickListener(v -> {
+            sharedPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
+            sharedPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
+            finish();
         });
 
-        rateNever = (TextView) findViewById(R.id.rateNever);
-        rateNever.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, true);
-                finish();
-            }
+        TextView rateNever = findViewById(R.id.rateNever);
+        rateNever.setOnClickListener(v -> {
+            sharedPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, true);
+            finish();
         });
     }
 

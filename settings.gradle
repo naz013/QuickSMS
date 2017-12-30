@@ -1,1 +1,1 @@
-include ':app', ':floating12', ':lib-core', ':lib-manipulation'
+include ':app'

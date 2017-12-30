@@ -78,7 +78,7 @@
 
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/messagesList"
@@ -87,7 +87,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:visibility="gone"
-        android:choiceMode="singleChoice"
         android:layout_marginRight="5dp"/>
 
 </RelativeLayout>

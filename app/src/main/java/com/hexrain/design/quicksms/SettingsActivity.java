@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,21 +19,18 @@ import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.SharedPrefs;
 
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
-    TextView versionName, thanks;
-    RelativeLayout enable, dark;
-    CheckBox enableCheck, darkCheck;
-    Toolbar toolbar;
-    RadioButton red_checkbox, violet_checkbox, green_checkbox, light_green_checkbox, blue_checkbox, light_blue_checkbox,
+    private CheckBox enableCheck, darkCheck;
+    private RadioButton red_checkbox, violet_checkbox, green_checkbox, light_green_checkbox, blue_checkbox, light_blue_checkbox,
             yellow_checkbox, orange_checkbox, grey_checkbox, pink_checkbox, sand_checkbox, brown_checkbox,
             deepPurple, indigoCheckbox, limeCheckbox, deepOrange;
-    RadioGroup themeGroup, themeGroup2, themeGroup3, themeGroupPro;
+    private RadioGroup themeGroup, themeGroup2, themeGroup3, themeGroupPro;
 
-    ColorSetter cSetter = new ColorSetter(SettingsActivity.this);
-    SharedPrefs prefs = new SharedPrefs(SettingsActivity.this);
+    private ColorSetter cSetter = new ColorSetter(SettingsActivity.this);
+    private SharedPrefs prefs = new SharedPrefs(SettingsActivity.this);
 
-    boolean runned = false;
+    private boolean runned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +41,7 @@ public class SettingsActivity extends ActionBarActivity {
         }
         setContentView(R.layout.activity_settings);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowCustomEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -54,7 +49,7 @@ public class SettingsActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(R.string.title_activity_settings);
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
 
-        versionName = (TextView) findViewById(R.id.versionName);
+        TextView versionName = findViewById(R.id.versionName);
         PackageInfo pInfo;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -65,50 +60,40 @@ public class SettingsActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        enable = (RelativeLayout) findViewById(R.id.enable);
-        enable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enableChange();
-            }
-        });
+        RelativeLayout enable = findViewById(R.id.enable);
+        enable.setOnClickListener(v -> enableChange());
 
-        enableCheck = (CheckBox) findViewById(R.id.enableCheck);
+        enableCheck = findViewById(R.id.enableCheck);
         enableCheck.setChecked(prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS));
 
-        dark = (RelativeLayout) findViewById(R.id.dark);
-        dark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                darkChange();
-            }
-        });
+        RelativeLayout dark = findViewById(R.id.dark);
+        dark.setOnClickListener(v -> darkChange());
 
-        darkCheck = (CheckBox) findViewById(R.id.darkCheck);
+        darkCheck = findViewById(R.id.darkCheck);
         darkCheck.setChecked(prefs.loadBoolean(Constants.PREFERENCES_USE_DARK_THEME));
 
-        red_checkbox = (RadioButton) findViewById(R.id.red_checkbox);
-        violet_checkbox = (RadioButton) findViewById(R.id.violet_checkbox);
-        green_checkbox = (RadioButton) findViewById(R.id.green_checkbox);
-        light_green_checkbox = (RadioButton) findViewById(R.id.light_green_checkbox);
-        blue_checkbox = (RadioButton) findViewById(R.id.blue_checkbox);
-        light_blue_checkbox = (RadioButton) findViewById(R.id.light_blue_checkbox);
-        yellow_checkbox = (RadioButton) findViewById(R.id.yellow_checkbox);
-        orange_checkbox = (RadioButton) findViewById(R.id.orange_checkbox);
-        grey_checkbox = (RadioButton) findViewById(R.id.grey_checkbox);
-        pink_checkbox = (RadioButton) findViewById(R.id.pink_checkbox);
-        sand_checkbox = (RadioButton) findViewById(R.id.sand_checkbox);
-        brown_checkbox = (RadioButton) findViewById(R.id.brown_checkbox);
+        red_checkbox = findViewById(R.id.red_checkbox);
+        violet_checkbox = findViewById(R.id.violet_checkbox);
+        green_checkbox = findViewById(R.id.green_checkbox);
+        light_green_checkbox = findViewById(R.id.light_green_checkbox);
+        blue_checkbox = findViewById(R.id.blue_checkbox);
+        light_blue_checkbox = findViewById(R.id.light_blue_checkbox);
+        yellow_checkbox = findViewById(R.id.yellow_checkbox);
+        orange_checkbox = findViewById(R.id.orange_checkbox);
+        grey_checkbox = findViewById(R.id.grey_checkbox);
+        pink_checkbox = findViewById(R.id.pink_checkbox);
+        sand_checkbox = findViewById(R.id.sand_checkbox);
+        brown_checkbox = findViewById(R.id.brown_checkbox);
 
-        deepPurple = (RadioButton) findViewById(R.id.deepPurple);
-        indigoCheckbox = (RadioButton) findViewById(R.id.indigoCheckbox);
-        limeCheckbox = (RadioButton) findViewById(R.id.limeCheckbox);
-        deepOrange = (RadioButton) findViewById(R.id.deepOrange);
+        deepPurple = findViewById(R.id.deepPurple);
+        indigoCheckbox = findViewById(R.id.indigoCheckbox);
+        limeCheckbox = findViewById(R.id.limeCheckbox);
+        deepOrange = findViewById(R.id.deepOrange);
 
-        themeGroup = (RadioGroup) findViewById(R.id.themeGroup);
-        themeGroup2 = (RadioGroup) findViewById(R.id.themeGroup2);
-        themeGroup3 = (RadioGroup) findViewById(R.id.themeGroup3);
-        themeGroupPro = (RadioGroup) findViewById(R.id.themeGroupPro);
+        themeGroup = findViewById(R.id.themeGroup);
+        themeGroup2 = findViewById(R.id.themeGroup2);
+        themeGroup3 = findViewById(R.id.themeGroup3);
+        themeGroupPro = findViewById(R.id.themeGroupPro);
 
         themeGroup.clearCheck();
         themeGroup2.clearCheck();
@@ -119,15 +104,10 @@ public class SettingsActivity extends ActionBarActivity {
         themeGroup3.setOnCheckedChangeListener(listener3);
         themeGroupPro.setOnCheckedChangeListener(listener4);
 
-        thanks = (TextView) findViewById(R.id.thanks);
-        thanks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this,
-                        ThanksDialog.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }
-        });
+        TextView thanks = findViewById(R.id.thanks);
+        thanks.setOnClickListener(v -> startActivity(new Intent(SettingsActivity.this,
+                ThanksDialog.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
 
         setUpRadio();
     }

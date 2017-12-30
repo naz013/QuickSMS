@@ -1,16 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar_main"/>
+    <include
+        android:id="@+id/toolbar_main"
+        layout="@layout/toolbar" />
 
     <RelativeLayout
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/background" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,32 +19,33 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit"
                 android:layout_margin="15dp"
-                android:maxLength="120"
-                android:hint="@string/string_message"/>
+                android:hint="@string/string_message"
+                android:maxLength="120" />
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal|top" />
+                android:layout_gravity="center_horizontal|top"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
-        <com.melnykov.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/button_floating_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_margin="16dp"
-            fab:fab_colorNormal="?attr/colorPrimary"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            android:src="@drawable/ic_done_white_24dp"/>
+            android:src="@drawable/ic_done_white_24dp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:fabSize="normal"
+            app:rippleColor="?attr/colorPrimaryDark" />
 
     </RelativeLayout>
 

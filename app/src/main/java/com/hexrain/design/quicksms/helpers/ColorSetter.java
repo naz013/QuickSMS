@@ -1,16 +1,14 @@
 package com.hexrain.design.quicksms.helpers;
 
 import android.content.Context;
-import android.graphics.Typeface;
 
 import com.hexrain.design.quicksms.R;
 
 
 public class ColorSetter {
 
-    Context cContext;
-    SharedPrefs sPrefs;
-    Typeface typeface;
+    private Context cContext;
+    private SharedPrefs sPrefs;
 
     public ColorSetter(Context context){
         this.cContext = context;
@@ -392,7 +390,7 @@ public class ColorSetter {
         return id;
     }
 
-    public int getCardStyle(){
+    int getCardStyle(){
         int color;
         sPrefs = new SharedPrefs(cContext);
         if (sPrefs.loadBoolean(Constants.PREFERENCES_USE_DARK_THEME)){

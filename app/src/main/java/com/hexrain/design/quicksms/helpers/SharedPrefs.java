@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPrefs {
-    SharedPreferences prefs;
-    Context pContext;
+    private SharedPreferences prefs;
+    private Context pContext;
     public static final String APP_UI_PREFERENCES = "settings";
     public static final String APP_CHANGES_PREFERENCES = "changes_settings";
     public static final String APP_PREFERENCES = "system_messages";
@@ -18,14 +18,14 @@ public class SharedPrefs {
         prefs = pContext.getSharedPreferences(APP_UI_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putString(stringToSave, value);
-        uiEd.commit();
+        uiEd.apply();
     }
 
     public void saveInt(String stringToSave, int value){
         prefs = pContext.getSharedPreferences(APP_UI_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putInt(stringToSave, value);
-        uiEd.commit();
+        uiEd.apply();
     }
 
     public int loadInt(String stringToLoad){
@@ -43,7 +43,7 @@ public class SharedPrefs {
         prefs = pContext.getSharedPreferences(APP_UI_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putLong(stringToSave, value);
-        uiEd.commit();
+        uiEd.apply();
     }
 
     public long loadLong(String stringToLoad){
@@ -78,7 +78,7 @@ public class SharedPrefs {
         prefs = pContext.getSharedPreferences(APP_UI_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putBoolean(stringToSave, value);
-        uiEd.commit();
+        uiEd.apply();
     }
 
     public boolean loadBoolean(String stringToLoad){
@@ -96,7 +96,7 @@ public class SharedPrefs {
         prefs = pContext.getSharedPreferences(APP_CHANGES_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putBoolean(stringToSave, true);
-        uiEd.commit();
+        uiEd.apply();
     }
 
     public boolean loadVersionBoolean(String stringToLoad){
@@ -114,7 +114,7 @@ public class SharedPrefs {
         prefs = pContext.getSharedPreferences(APP_PREFERENCES, MODE);
         SharedPreferences.Editor uiEd = prefs.edit();
         uiEd.putBoolean(key, value);
-        uiEd.commit();
+        uiEd.apply();
     }
     public boolean loadSystemBoolean(String key){
         prefs = pContext.getSharedPreferences(APP_PREFERENCES, MODE);

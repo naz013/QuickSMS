@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,19 +19,15 @@ import com.hexrain.design.quicksms.helpers.ColorSetter;
 import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.Crypter;
 import com.hexrain.design.quicksms.helpers.Database;
-import com.melnykov.fab.FloatingActionButton;
 
+public class CreateEdit extends AppCompatActivity {
 
-public class CreateEdit extends ActionBarActivity {
+    private ColorSetter cSetter = new ColorSetter(CreateEdit.this);
+    private EditText editText;
+    private TextView textView2;
 
-    Toolbar toolbar;
-    ColorSetter cSetter = new ColorSetter(CreateEdit.this);
-    FloatingActionButton mFab;
-    EditText editText;
-    TextView textView2;
-
-    private static long id = 0;
-    private static Database db;
+    private long id = 0;
+    private Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,27 +38,21 @@ public class CreateEdit extends ActionBarActivity {
         }
         setContentView(R.layout.fragment_create_template);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.string_add_template);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
 
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
 
-        mFab = (FloatingActionButton) findViewById(R.id.button_floating_action);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveTemplate();
-            }
-        });
-        mFab.setType(FloatingActionButton.TYPE_NORMAL);
+        FloatingActionButton mFab = findViewById(R.id.button_floating_action);
+        mFab.setOnClickListener(v -> saveTemplate());
 
         Intent intent = getIntent();
         id = intent.getLongExtra("id", 0);
 
-        editText = (EditText) findViewById(R.id.edit);
-        textView2 = (TextView) findViewById(R.id.textView2);
+        editText = findViewById(R.id.edit);
+        textView2 = findViewById(R.id.textView2);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -73,8 +63,7 @@ public class CreateEdit extends ActionBarActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = s.toString().trim();
                 int left = 120 - text.length();
-                textView2.setText(getString(R.string.string_characters_left) +
-                        " " + left);
+                textView2.setText(getString(R.string.string_characters_left) + " " + left);
             }
 
             @Override
@@ -115,6 +104,5 @@ public class CreateEdit extends ActionBarActivity {
         }
         Toast.makeText(CreateEdit.this, getString(R.string.string_saved), Toast.LENGTH_SHORT).show();
         finish();
-        System.gc();
     }
 }

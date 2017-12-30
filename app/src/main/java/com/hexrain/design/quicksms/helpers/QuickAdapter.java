@@ -2,22 +2,17 @@ package com.hexrain.design.quicksms.helpers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Typeface;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.hexrain.design.quicksms.R;
-
 public class QuickAdapter extends CursorAdapter{
 
-    TextView eventType;
-    LayoutInflater inflater;
-    Context cContext;
-    Cursor c;
+    private LayoutInflater inflater;
+    private Context cContext;
+    private Cursor c;
 
     @SuppressWarnings("deprecation")
     public QuickAdapter(Context context, Cursor c) {
@@ -54,7 +49,7 @@ public class QuickAdapter extends CursorAdapter{
             convertView = inflater.inflate(android.R.layout.simple_list_item_single_choice, null);
         }
 
-        eventType = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView eventType = convertView.findViewById(android.R.id.text1);
 
         String message = c.getString(c.getColumnIndex(Constants.COLUMN_TEXT));
         eventType.setText(new Crypter().decrypt(message));

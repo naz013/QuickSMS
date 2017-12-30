@@ -4,20 +4,18 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,27 +25,23 @@ import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.CustomAdapter;
 import com.hexrain.design.quicksms.helpers.Database;
 import com.hexrain.design.quicksms.helpers.SharedPrefs;
-import com.melnykov.fab.FloatingActionButton;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 
 import java.io.File;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    ColorSetter cSetter = new ColorSetter(MainActivity.this);
-    SharedPrefs prefs = new SharedPrefs(MainActivity.this);
-    FloatingActionButton mFab;
-    CheckBox check;
-    CustomAdapter customAdapter;
-    ListView listView;
-    TextView textView3;
+    private Toolbar toolbar;
+    private ColorSetter cSetter = new ColorSetter(MainActivity.this);
+    private SharedPrefs prefs = new SharedPrefs(MainActivity.this);
+    private CheckBox check;
+    private CustomAdapter customAdapter;
+    private RecyclerView listView;
+    private FloatingActionButton mFab;
 
-    private static Database db;
+    private Database db;
     public static final String APP_UI_PREFERENCES = "settings";
-    SharedPreferences appUISettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,52 +56,38 @@ public class MainActivity extends ActionBarActivity {
 
         File settingsUI = new File("/data/data/" + getPackageName() + "/shared_prefs/" + APP_UI_PREFERENCES + ".xml");
         if(!settingsUI.exists()) {
-            appUISettings = getSharedPreferences(APP_UI_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences appUISettings = getSharedPreferences(APP_UI_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor uiEd = appUISettings.edit();
             uiEd.putString(Constants.PREFERENCES_THEME, "1");
             uiEd.putBoolean(Constants.PREFERENCES_USE_DARK_THEME, false);
             uiEd.putBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
-            uiEd.commit();
+            uiEd.apply();
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
 
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
 
-        mFab = (FloatingActionButton) findViewById(R.id.button_floating_action);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CreateEdit.class));
-            }
-        });
-        mFab.setType(FloatingActionButton.TYPE_NORMAL);
+        mFab = findViewById(R.id.button_floating_action);
+        mFab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CreateEdit.class)));
 
-        check = (CheckBox) findViewById(R.id.check);
+        check = findViewById(R.id.check);
         check.setVisibility(View.GONE);
-        check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
-                    check.setVisibility(View.GONE);
-                }
+        check.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
+                check.setVisibility(View.GONE);
             }
         });
 
-        textView3 = (TextView) findViewById(R.id.textView3);
+        TextView textView3 = findViewById(R.id.textView3);
 
-        listView = (ListView) findViewById(R.id.list);
-        listView.setEmptyView(textView3);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, CreateEdit.class).putExtra("id", id));
-            }
-        });
+        listView = findViewById(R.id.list);
+        listView.setLayoutManager(new LinearLayoutManager(this));
+        listView.setOnItemClickListener((parent, view, position, id) -> startActivity(new Intent(MainActivity.this, CreateEdit.class).putExtra("id", id)));
 
         if (!prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) check.setVisibility(View.VISIBLE);
     }
@@ -135,19 +115,16 @@ public class MainActivity extends ActionBarActivity {
         db = new Database(MainActivity.this);
         db.open();
         customAdapter = new CustomAdapter(MainActivity.this, db.queryTemplates());
-        SwipeDismissAdapter adapter = new SwipeDismissAdapter(customAdapter, new OnDismissCallback() {
-            @Override
-            public void onDismiss(@NonNull ViewGroup listView, @NonNull int[] reverseSortedPositions) {
-                for (int position : reverseSortedPositions) {
-                    db = new Database(MainActivity.this);
-                    db.open();
-                    customAdapter = new CustomAdapter(MainActivity.this, db.queryTemplates());
-                    final long itemId = customAdapter.getItemId(position);
-                    db.deleteTemplate(itemId);
-                    loadList();
-                    Toast.makeText(MainActivity.this, getString(R.string.string_deleted),
-                            Toast.LENGTH_SHORT).show();
-                }
+        SwipeDismissAdapter adapter = new SwipeDismissAdapter(customAdapter, (listView, reverseSortedPositions) -> {
+            for (int position : reverseSortedPositions) {
+                db = new Database(MainActivity.this);
+                db.open();
+                customAdapter = new CustomAdapter(MainActivity.this, db.queryTemplates());
+                final long itemId = customAdapter.getItemId(position);
+                db.deleteTemplate(itemId);
+                loadList();
+                Toast.makeText(MainActivity.this, getString(R.string.string_deleted),
+                        Toast.LENGTH_SHORT).show();
             }
         });
         adapter.setAbsListView(listView);
@@ -211,8 +188,8 @@ public class MainActivity extends ActionBarActivity {
         }
 
         toolbar.setBackgroundColor(cSetter.colorSetter());
-        mFab.setColorNormal(cSetter.colorSetter());
-        mFab.setColorPressed(cSetter.colorStatus());
+        mFab.setBackgroundColor(cSetter.colorSetter());
+        mFab.setRippleColor(cSetter.colorStatus());
 
         String action = getIntent().getAction();
         if(action == null || !action.equals("JustActivity Created")) {

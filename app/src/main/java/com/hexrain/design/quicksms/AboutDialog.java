@@ -10,21 +10,20 @@ import com.hexrain.design.quicksms.helpers.ColorSetter;
 
 public class AboutDialog extends Activity {
 
-    TextView appVersion, appName;
-    ColorSetter cs = new ColorSetter(AboutDialog.this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ColorSetter cs = new ColorSetter(this);
+
         setTheme(cs.getDialogStyle());
         setContentView(R.layout.about_dialog_layout);
 
-        appName = (TextView) findViewById(R.id.appName);
+        TextView appName = findViewById(R.id.appName);
         String name = getString(R.string.app_name);
         appName.setText(name.toUpperCase());
 
-        appVersion = (TextView) findViewById(R.id.appVersion);
+        TextView appVersion = findViewById(R.id.appVersion);
         PackageInfo pInfo;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
