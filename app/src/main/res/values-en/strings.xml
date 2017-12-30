@@ -31,4 +31,6 @@
     <string name="empty_warming">Must be not empty!</string>
     <string name="empty_list_warming">You don\'t have templates, so type new message to send it</string>
     <string name="string_send">Send</string>
+    <string name="delete">Delete</string>
+    <string name="cant_launch_market">Couldn\'t launch market</string>
 </resources>

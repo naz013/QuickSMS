@@ -31,4 +31,6 @@
     <string name="empty_warming">Не должно быть пустым!</string>
     <string name="empty_list_warming">You don\'t have templates, so type new message to send it</string>
     <string name="string_send">Отправить</string>
+    <string name="delete">Удалить</string>
+    <string name="cant_launch_market">Не могу открыть Play Маркет</string>
 </resources>

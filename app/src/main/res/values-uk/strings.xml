@@ -31,4 +31,6 @@
     <string name="empty_warming">Не має бути порожнім!</string>
     <string name="empty_list_warming">You don\'t have templates, so type new message to send it</string>
     <string name="string_send">Надіслати</string>
+    <string name="cant_launch_market">Не можу відкрити Play Маркет</string>
+    <string name="delete">Видалити</string>
 </resources>
