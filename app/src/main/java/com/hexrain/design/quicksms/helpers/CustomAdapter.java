@@ -1,80 +1,82 @@
 package com.hexrain.design.quicksms.helpers;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Typeface;
-import android.support.v7.widget.CardView;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hexrain.design.quicksms.CreateEdit;
 import com.hexrain.design.quicksms.R;
+import com.hexrain.design.quicksms.databinding.ListItemLayoutBinding;
 
-public class CustomAdapter extends CursorAdapter{
+import java.util.List;
 
-    private LayoutInflater inflater;
-    private Context cContext;
-    private Cursor c;
+public class CustomAdapter extends FilterableAdapter<TemplateItem, String, CustomAdapter.ViewHolder> {
 
-    @SuppressWarnings("deprecation")
-    public CustomAdapter(Context context, Cursor c) {
-        super(context, c);
-        this.cContext = context;
-        inflater = LayoutInflater.from(context);
-        this.c = c;
-        c.moveToFirst();
+    @NonNull
+    private Context mContext;
+
+    public CustomAdapter(@NonNull Context mContext, @NonNull List<TemplateItem> mDataList, @Nullable Filter<TemplateItem, String> filter) {
+        super(mDataList, filter);
+        this.mContext = mContext;
     }
 
     @Override
-    public int getCount() {
-        return c.getCount();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(ListItemLayoutBinding.inflate(LayoutInflater.from(mContext), parent, false).getRoot());
     }
 
     @Override
-    public Object getItem(int position) {
-        return super.getItem(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.binding.messageView.setText(Crypter.decrypt(getItem(position).getMessage()));
     }
 
-    @Override
-    public long getItemId(int position) {
-        Cursor cursor = getCursor();
-        cursor.moveToPosition(position);
-        return cursor.getLong(cursor.getColumnIndex("_id"));
-    }
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        c.moveToPosition(position);
+        private ListItemLayoutBinding binding;
 
-        if (convertView == null) {
-            inflater = (LayoutInflater) cContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_layout, null);
+        ViewHolder(View itemView) {
+            super(itemView);
+            binding = DataBindingUtil.bind(itemView);
+            binding.getRoot().setOnClickListener(view -> openTemplate(getAdapterPosition()));
+            binding.getRoot().setOnLongClickListener(view -> {
+                showMenu(getAdapterPosition());
+                return true;
+            });
         }
-
-        ColorSetter cs = new ColorSetter(cContext);
-        CardView card = convertView.findViewById(R.id.card);
-        card.setCardBackgroundColor(cs.getCardStyle());
-
-        Typeface typeface = Typeface.createFromAsset(cContext.getAssets(), "Roboto-Light.ttf");
-
-        TextView eventType = convertView.findViewById(R.id.textView);
-        eventType.setTypeface(typeface);
-
-        String message = c.getString(c.getColumnIndex(Constants.COLUMN_TEXT));
-        eventType.setText(new Crypter().decrypt(message));
-
-        return convertView;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.list_item_layout, null);
+    private void showMenu(int position) {
+        String[] items = new String[]{mContext.getString(R.string.string_edit_template), mContext.getString(R.string.delete)};
+        AppUtils.showLCAM(mContext, item -> {
+            switch (item) {
+                case 0:
+                    openTemplate(position);
+                    break;
+                case 1:
+                    deleteTemplate(position);
+                    break;
+            }
+        }, items);
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    private void deleteTemplate(int position) {
+        TemplateItem item = getItem(position);
+        Database db = new Database(mContext);
+        db.open();
+        db.deleteTemplate(item);
+        db.close();
+        removeItem(position);
+        Toast.makeText(mContext, mContext.getString(R.string.string_deleted), Toast.LENGTH_SHORT).show();
+    }
 
+    private void openTemplate(int position) {
+        mContext.startActivity(new Intent(mContext, CreateEdit.class).putExtra("id", getItem(position).getId()));
     }
 }

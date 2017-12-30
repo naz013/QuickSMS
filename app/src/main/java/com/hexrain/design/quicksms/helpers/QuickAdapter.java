@@ -1,69 +1,80 @@
 package com.hexrain.design.quicksms.helpers;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.databinding.DataBindingUtil;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
 
-public class QuickAdapter extends CursorAdapter{
+import com.hexrain.design.quicksms.databinding.ListItemLayoutBinding;
 
-    private LayoutInflater inflater;
-    private Context cContext;
-    private Cursor c;
+import java.util.ArrayList;
+import java.util.List;
 
-    @SuppressWarnings("deprecation")
-    public QuickAdapter(Context context, Cursor c) {
-        super(context, c);
-        this.cContext = context;
-        inflater = LayoutInflater.from(context);
-        this.c = c;
-        c.moveToFirst();
+public class QuickAdapter extends RecyclerView.Adapter<QuickAdapter.ViewHolder> {
+
+    private List<TemplateItem> mDataList = new ArrayList<>();
+    private Context mContext;
+    private int selectedPosition = -1;
+    private ColorSetter themeUtil;
+
+    public QuickAdapter(List<TemplateItem> mDataList, Context context) {
+        this.mDataList = mDataList;
+        this.mContext = context;
+        themeUtil = new ColorSetter(context);
     }
 
     @Override
-    public int getCount() {
-        return c.getCount();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(ListItemLayoutBinding.inflate(LayoutInflater.from(mContext), parent, false).getRoot());
     }
 
     @Override
-    public Object getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        Cursor cursor = getCursor();
-        cursor.moveToPosition(position);
-        return cursor.getLong(cursor.getColumnIndex("_id"));
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        c.moveToPosition(position);
-
-        if (convertView == null) {
-            inflater = (LayoutInflater) cContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(android.R.layout.simple_list_item_single_choice, null);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final TemplateItem item = mDataList.get(position);
+        holder.binding.messageView.setText(Crypter.decrypt(item.getMessage()));
+        if (item.isSelected()) {
+            holder.binding.cardView.setCardBackgroundColor(themeUtil.getColor(themeUtil.colorStatus()));
+        } else {
+            holder.binding.cardView.setCardBackgroundColor(themeUtil.getCardStyle());
         }
-
-        TextView eventType = convertView.findViewById(android.R.id.text1);
-
-        String message = c.getString(c.getColumnIndex(Constants.COLUMN_TEXT));
-        eventType.setText(new Crypter().decrypt(message));
-
-        return convertView;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(android.R.layout.simple_list_item_single_choice, null);
+    public int getItemCount() {
+        return mDataList.size();
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
+        private ListItemLayoutBinding binding;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            binding = DataBindingUtil.bind(itemView);
+            binding.getRoot().setOnClickListener(view -> selectItem(getAdapterPosition()));
+        }
+    }
+
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
+
+    public TemplateItem getItem(int position) {
+        return mDataList.get(position);
+    }
+
+    void selectItem(int position) {
+        if (position == selectedPosition) return;
+        if (selectedPosition != -1 && selectedPosition < mDataList.size()) {
+            mDataList.get(selectedPosition).setSelected(false);
+            notifyItemChanged(selectedPosition);
+        }
+        this.selectedPosition = position;
+        if (position < mDataList.size()) {
+            mDataList.get(position).setSelected(true);
+            notifyItemChanged(position);
+        }
     }
 }

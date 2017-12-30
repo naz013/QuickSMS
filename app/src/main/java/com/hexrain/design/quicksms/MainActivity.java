@@ -25,7 +25,6 @@ import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.CustomAdapter;
 import com.hexrain.design.quicksms.helpers.Database;
 import com.hexrain.design.quicksms.helpers.SharedPrefs;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 
 import java.io.File;
 
@@ -37,11 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private ColorSetter cSetter = new ColorSetter(MainActivity.this);
     private SharedPrefs prefs = new SharedPrefs(MainActivity.this);
     private CheckBox check;
-    private CustomAdapter customAdapter;
     private RecyclerView listView;
     private FloatingActionButton mFab;
+    private TextView textView3;
 
-    private Database db;
     public static final String APP_UI_PREFERENCES = "settings";
 
     @Override
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         getIntent().setAction("JustActivity Created");
 
         File settingsUI = new File("/data/data/" + getPackageName() + "/shared_prefs/" + APP_UI_PREFERENCES + ".xml");
-        if(!settingsUI.exists()) {
+        if (!settingsUI.exists()) {
             SharedPreferences appUISettings = getSharedPreferences(APP_UI_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor uiEd = appUISettings.edit();
             uiEd.putString(Constants.PREFERENCES_THEME, "1");
@@ -79,22 +77,22 @@ public class MainActivity extends AppCompatActivity {
         check = findViewById(R.id.check);
         check.setVisibility(View.GONE);
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
+            if (isChecked) {
                 prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
                 check.setVisibility(View.GONE);
             }
         });
 
-        TextView textView3 = findViewById(R.id.textView3);
+        textView3 = findViewById(R.id.textView3);
+        textView3.setVisibility(View.VISIBLE);
 
         listView = findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(this));
-        listView.setOnItemClickListener((parent, view, position, id) -> startActivity(new Intent(MainActivity.this, CreateEdit.class).putExtra("id", id)));
 
         if (!prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) check.setVisibility(View.VISIBLE);
     }
 
-    private void showRate(){
+    private void showRate() {
         SharedPrefs sPrefs = new SharedPrefs(MainActivity.this);
 
         if (sPrefs.isString(Constants.PREFERENCES_RATE_SHOWN)) {
@@ -113,24 +111,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadList(){
-        db = new Database(MainActivity.this);
+    private void loadList() {
+        Database db = new Database(MainActivity.this);
         db.open();
-        customAdapter = new CustomAdapter(MainActivity.this, db.queryTemplates());
-        SwipeDismissAdapter adapter = new SwipeDismissAdapter(customAdapter, (listView, reverseSortedPositions) -> {
-            for (int position : reverseSortedPositions) {
-                db = new Database(MainActivity.this);
-                db.open();
-                customAdapter = new CustomAdapter(MainActivity.this, db.queryTemplates());
-                final long itemId = customAdapter.getItemId(position);
-                db.deleteTemplate(itemId);
-                loadList();
-                Toast.makeText(MainActivity.this, getString(R.string.string_deleted),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-        adapter.setAbsListView(listView);
-        listView.setAdapter(adapter);
+        CustomAdapter customAdapter = new CustomAdapter(MainActivity.this, db.getItems(), null);
+        db.close();
+        listView.setAdapter(customAdapter);
+        if (customAdapter.getItemCount() == 0) {
+            listView.setVisibility(View.GONE);
+            textView3.setVisibility(View.VISIBLE);
+        } else {
+            textView3.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -146,19 +139,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             return true;
         }
-        if (id == R.id.action_exit){
+        if (id == R.id.action_exit) {
             finish();
             return true;
         }
-        if (id == R.id.action_feedback){
+        if (id == R.id.action_feedback) {
             final Intent emailIntent = new Intent(Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "feedback.cray@gmail.com" });
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"feedback.cray@gmail.com"});
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Quick SMS");
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             return true;
         }
-        if (id == R.id.action_more){
+        if (id == R.id.action_more) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("market://search?q=pub:Nazar Suhovich"));
             try {
@@ -167,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Couldn't launch market", Toast.LENGTH_LONG).show();
             }
         }
-        if (id == R.id.action_rate){
+        if (id == R.id.action_rate) {
             Uri uri = Uri.parse("market://details?id=" + getPackageName());
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
             try {
@@ -194,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         mFab.setRippleColor(cSetter.colorStatus());
 
         String action = getIntent().getAction();
-        if(action == null || !action.equals("JustActivity Created")) {
+        if (action == null || !action.equals("JustActivity Created")) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

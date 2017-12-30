@@ -14,7 +14,7 @@ public class ColorSetter {
         this.cContext = context;
     }
 
-    private int getColor(int color){
+    public int getColor(int color){
         return cContext.getResources().getColor(color);
     }
 

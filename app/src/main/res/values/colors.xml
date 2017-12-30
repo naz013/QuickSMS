@@ -95,4 +95,6 @@
     <color name="grey_y">#999999</color>
     <color name="grey_z">#aaaaaa</color>
 
+    <color name="material_divider">#b6b6b6</color>
+
 </resources>

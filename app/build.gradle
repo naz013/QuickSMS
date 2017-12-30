@@ -26,7 +26,16 @@ android {
         versionCode 1
         versionName "0.9b"
     }
-
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    dataBinding {
+        enabled = true
+    }
     signingConfigs {
         free {
             storeFile file('keystore.jks')
@@ -35,7 +44,6 @@ android {
             keyPassword 'nazar032015'
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -63,10 +71,10 @@ dependencies {
     implementation 'com.android.support:support-v4:27.0.2'
     implementation 'com.android.support:design:27.0.2'
     implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
+        transitive = true
     }
 }
-
 
 apply plugin: 'com.google.gms.google-services'

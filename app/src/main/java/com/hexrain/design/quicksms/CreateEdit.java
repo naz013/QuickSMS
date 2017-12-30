@@ -2,9 +2,9 @@ package com.hexrain.design.quicksms;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hexrain.design.quicksms.helpers.ColorSetter;
-import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.Crypter;
 import com.hexrain.design.quicksms.helpers.Database;
+import com.hexrain.design.quicksms.helpers.TemplateItem;
 
 public class CreateEdit extends AppCompatActivity {
 
@@ -26,8 +26,8 @@ public class CreateEdit extends AppCompatActivity {
     private EditText editText;
     private TextView textView2;
 
-    private long id = 0;
-    private Database db;
+    @Nullable
+    private TemplateItem mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,11 @@ public class CreateEdit extends AppCompatActivity {
         mFab.setOnClickListener(v -> saveTemplate());
 
         Intent intent = getIntent();
-        id = intent.getLongExtra("id", 0);
+        long id = intent.getLongExtra("id", 0);
+        Database db = new Database(this);
+        db.open();
+        mItem = db.getTemplate(id);
+        db.close();
 
         editText = findViewById(R.id.edit);
         textView2 = findViewById(R.id.textView2);
@@ -72,15 +76,9 @@ public class CreateEdit extends AppCompatActivity {
             }
         });
 
-        db = new Database(CreateEdit.this);
-        db.open();
-        if (id != 0){
-            Cursor c = db.getTemplate(id);
-            if (c != null && c.moveToFirst()){
-                String text = c.getString(c.getColumnIndex(Constants.COLUMN_TEXT));
-                editText.setText(new Crypter().decrypt(text));
-                getSupportActionBar().setTitle(getString(R.string.string_edit_template));
-            }
+        if (mItem != null) {
+            editText.setText(new Crypter().decrypt(mItem.getMessage()));
+            getSupportActionBar().setTitle(getString(R.string.string_edit_template));
         }
     }
 
@@ -91,18 +89,25 @@ public class CreateEdit extends AppCompatActivity {
             return;
         }
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        hideKeyboard();
         String temp = new Crypter().encrypt(text);
-        db = new Database(CreateEdit.this);
+        Database db = new Database(CreateEdit.this);
         db.open();
-        if (id != 0){
-            db.updateTemplate(id, temp, System.currentTimeMillis());
+        if (mItem != null) {
+            mItem.setMessage(temp);
+            mItem.setDateTime(System.currentTimeMillis());
         } else {
-            db.addTemplate(temp, System.currentTimeMillis());
+            mItem = new TemplateItem(0, temp, System.currentTimeMillis());
         }
+        db.saveTemplate(mItem);
+        db.close();
         Toast.makeText(CreateEdit.this, getString(R.string.string_saved), Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }

@@ -7,6 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private static final String DB_NAME = "quick_base";
@@ -59,7 +64,7 @@ public class Database {
         return this;
     }
 
-    public boolean isOpen () {
+    public boolean isOpen() {
         return db != null && db.isOpen();
     }
 
@@ -68,22 +73,63 @@ public class Database {
     }
 
     public void close() {
-        if( dbHelper != null )
+        if (dbHelper != null)
             dbHelper.close();
     }
 
-    //Working with SMS templates table
+    public void saveTemplate(@NonNull TemplateItem item) {
+        if (item.getId() == 0) {
+            addTemplate(item.getMessage(), item.getDateTime());
+        } else {
+            updateTemplate(item.getId(), item.getMessage(), item.getDateTime());
+        }
+    }
 
-    public long addTemplate (String text, long dateTime) {
+    @Nullable
+    public TemplateItem getTemplate(long id) {
+        Cursor c = get(id);
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            TemplateItem item = fromCursor(c);
+            c.close();
+            return item;
+        }
+        return null;
+    }
+
+    public void deleteTemplate(@NonNull TemplateItem item) {
+        deleteTemplate(item.getId());
+    }
+
+    @NonNull
+    public List<TemplateItem> getItems() {
+        Cursor c = queryTemplates();
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            List<TemplateItem> list = new ArrayList<>();
+            do {
+                list.add(fromCursor(c));
+            } while (c.moveToNext());
+            c.close();
+            return list;
+        }
+        return new ArrayList<>();
+    }
+
+    @NonNull
+    private TemplateItem fromCursor(Cursor c) {
+        return new TemplateItem(c.getLong(c.getColumnIndex(Constants.COLUMN_ID)), c.getString(c.getColumnIndex(Constants.COLUMN_TEXT)), c.getLong(c.getColumnIndex(Constants.COLUMN_DATE_TIME)));
+    }
+
+    private long addTemplate(String text, long dateTime) {
         openGuard();
         ContentValues cv = new ContentValues();
         cv.put(Constants.COLUMN_TEXT, text);
         cv.put(Constants.COLUMN_DATE_TIME, dateTime);
-        //Log.d(LOG_TAG, "data is inserted " + cv);
         return db.insert(MESSAGES_TABLE_NAME, null, cv);
     }
 
-    public boolean updateTemplate(long rowId, String text, long dateTime){
+    private boolean updateTemplate(long rowId, String text, long dateTime) {
         openGuard();
         ContentValues args = new ContentValues();
         args.put(Constants.COLUMN_TEXT, text);
@@ -91,26 +137,26 @@ public class Database {
         return db.update(MESSAGES_TABLE_NAME, args, Constants.COLUMN_ID + "=" + rowId, null) > 0;
     }
 
-    public Cursor getTemplate(long id) throws SQLException {
+    private Cursor get(long id) throws SQLException {
         openGuard();
-        return db.query(MESSAGES_TABLE_NAME, null, Constants.COLUMN_ID  +
+        return db.query(MESSAGES_TABLE_NAME, null, Constants.COLUMN_ID +
                 "=" + id, null, null, null, null, null);
     }
 
-    public Cursor queryTemplates() throws SQLException {
+    private Cursor queryTemplates() throws SQLException {
         openGuard();
         return db.query(MESSAGES_TABLE_NAME, null, null, null, null, null, null);
     }
 
-    public boolean deleteTemplate(long rowId) {
+    private boolean deleteTemplate(long rowId) {
         openGuard();
         return db.delete(MESSAGES_TABLE_NAME, Constants.COLUMN_ID + "=" + rowId, null) > 0;
     }
 
     public void openGuard() throws SQLiteException {
-        if(isOpen()) return;
+        if (isOpen()) return;
         open();
-        if(isOpen()) return;
+        if (isOpen()) return;
         //Log.d(LOG_TAG, "open guard failed");
         throw new SQLiteException("Could not open database");
     }
