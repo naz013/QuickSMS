@@ -1,14 +1,18 @@
 package com.hexrain.design.quicksms;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +36,8 @@ import java.io.File;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQ_PERM = 1236;
 
     private Toolbar toolbar;
     private ColorSetter cSetter = new ColorSetter(MainActivity.this);
@@ -77,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
         check = findViewById(R.id.check);
         check.setVisibility(View.GONE);
-        check.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
-                check.setVisibility(View.GONE);
+        check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkClick();
             }
         });
 
@@ -93,9 +99,17 @@ public class MainActivity extends AppCompatActivity {
         if (!prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) check.setVisibility(View.VISIBLE);
     }
 
+    private void checkClick() {
+        if (!checkPermissions()) {
+            askPermissions();
+            return;
+        }
+        prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
+        check.setVisibility(View.GONE);
+    }
+
     private void showRate() {
         SharedPrefs sPrefs = new SharedPrefs(MainActivity.this);
-
         if (sPrefs.isString(Constants.PREFERENCES_RATE_SHOWN)) {
             if (!sPrefs.loadBoolean(Constants.PREFERENCES_RATE_SHOWN)) {
                 int counts = sPrefs.loadInt(Constants.PREFERENCES_APP_RUNS);
@@ -221,5 +235,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loadList();
+    }
+
+    private void askPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.ACCESS_NETWORK_STATE,
+                            Manifest.permission.READ_CONTACTS},
+                    REQ_PERM);
+        }
+    }
+
+    private boolean checkPermissions() {
+        return !(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 0) return;
+        switch (requestCode) {
+            case REQ_PERM:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    checkClick();
+                }
+                break;
+        }
     }
 }

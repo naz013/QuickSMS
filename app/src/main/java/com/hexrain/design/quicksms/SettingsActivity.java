@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -18,8 +20,9 @@ import com.hexrain.design.quicksms.helpers.ColorSetter;
 import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.SharedPrefs;
 
-
 public class SettingsActivity extends AppCompatActivity {
+
+    private static final int REQ_PERM = 1236;
 
     private CheckBox enableCheck, darkCheck;
     private RadioButton red_checkbox, violet_checkbox, green_checkbox, light_green_checkbox, blue_checkbox, light_blue_checkbox,
@@ -181,7 +184,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     };
 
-    public void setUpRadio(){
+    public void setUpRadio() {
         String loaded = prefs.loadPrefs(Constants.PREFERENCES_THEME);
         switch (loaded) {
             case "1":
@@ -240,8 +243,8 @@ public class SettingsActivity extends AppCompatActivity {
         runned = true;
     }
 
-    private void themeColorSwitch(int radio){
-        switch (radio){
+    private void themeColorSwitch(int radio) {
+        switch (radio) {
             case R.id.red_checkbox:
                 saveColor("1");
                 break;
@@ -299,18 +302,22 @@ public class SettingsActivity extends AppCompatActivity {
         if (runned) recreate();
     }
 
-    private void enableChange (){
-        if (enableCheck.isChecked()){
+    private void enableChange() {
+        if (enableCheck.isChecked()) {
             prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, false);
             enableCheck.setChecked(false);
         } else {
+            if (!checkPermissions()) {
+                askPermissions();
+                return;
+            }
             prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
             enableCheck.setChecked(true);
         }
     }
 
-    private void darkChange (){
-        if (darkCheck.isChecked()){
+    private void darkChange() {
+        if (darkCheck.isChecked()) {
             prefs.saveBoolean(Constants.PREFERENCES_USE_DARK_THEME, false);
             darkCheck.setChecked(false);
         } else {
@@ -322,17 +329,42 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void askPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                            android.Manifest.permission.READ_PHONE_STATE,
+                            android.Manifest.permission.SEND_SMS,
+                            android.Manifest.permission.ACCESS_NETWORK_STATE,
+                            android.Manifest.permission.READ_CONTACTS},
+                    REQ_PERM);
+        }
+    }
+
+    private boolean checkPermissions() {
+        return !(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 0) return;
+        switch (requestCode) {
+            case REQ_PERM:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableChange();
+                }
+                break;
+        }
     }
 }

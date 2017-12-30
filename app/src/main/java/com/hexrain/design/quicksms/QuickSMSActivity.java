@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
@@ -31,6 +34,8 @@ import com.hexrain.design.quicksms.helpers.QuickAdapter;
 import com.hexrain.design.quicksms.helpers.TemplateItem;
 
 public class QuickSMSActivity extends Activity {
+
+    private static final int REQ_PERM = 1236;
 
     private TextView buttonSend;
     private RecyclerView messagesList;
@@ -98,6 +103,10 @@ public class QuickSMSActivity extends Activity {
     }
 
     private void sendMessage() {
+        if (!checkPermissions()) {
+            askPermissions();
+            return;
+        }
         if (quickAdapter.getItemCount() == 0) {
             text.setChecked(true);
             Toast.makeText(QuickSMSActivity.this, getString(R.string.empty_list_warming),
@@ -107,7 +116,7 @@ public class QuickSMSActivity extends Activity {
         if (template.isChecked()) {
             int position = quickAdapter.getSelectedPosition();
             TemplateItem item = quickAdapter.getItem(position);
-            String message = new Crypter().decrypt(item.getMessage());
+            String message = Crypter.decrypt(item.getMessage());
             sendSMS(number, message);
         }
         if (text.isChecked()){
@@ -188,6 +197,37 @@ public class QuickSMSActivity extends Activity {
 
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(number, null, message, sentPI, deliveredPI);
+    }
+
+    private void askPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                            android.Manifest.permission.READ_PHONE_STATE,
+                            android.Manifest.permission.SEND_SMS,
+                            android.Manifest.permission.ACCESS_NETWORK_STATE,
+                            android.Manifest.permission.READ_CONTACTS},
+                    REQ_PERM);
+        }
+    }
+
+    private boolean checkPermissions() {
+        return !(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 0) return;
+        switch (requestCode) {
+            case REQ_PERM:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendMessage();
+                }
+                break;
+        }
     }
 
     @Override
