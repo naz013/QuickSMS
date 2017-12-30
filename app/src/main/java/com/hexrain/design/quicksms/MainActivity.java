@@ -1,5 +1,6 @@
 package com.hexrain.design.quicksms;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -102,12 +103,41 @@ public class MainActivity extends AppCompatActivity {
                     sPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, counts + 1);
                 } else {
                     sPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
-                    startActivity(new Intent(MainActivity.this, RateDialog.class));
+                    sPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, true);
+                    showRateDialog();
                 }
             }
         } else {
             sPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
             sPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
+        }
+    }
+
+    private void showRateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.atring_rate);
+        builder.setMessage(R.string.rate_text);
+        builder.setPositiveButton(R.string.button_rate, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            launchMarket();
+        });
+        builder.setNegativeButton(R.string.button_never, (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.setNeutralButton(R.string.button_later, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            SharedPrefs sPrefs = new SharedPrefs(MainActivity.this);
+            sPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
+            sPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
+        });
+        builder.create().show();
+    }
+
+    private void launchMarket() {
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.cant_launch_market, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -157,19 +187,14 @@ public class MainActivity extends AppCompatActivity {
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(this, "Couldn't launch market", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.cant_launch_market, Toast.LENGTH_LONG).show();
             }
+            return true;
         }
         if (id == R.id.action_rate) {
-            Uri uri = Uri.parse("market://details?id=" + getPackageName());
-            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-            try {
-                startActivity(goToMarket);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(this, "Couldn't launch market", Toast.LENGTH_LONG).show();
-            }
+            launchMarket();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
