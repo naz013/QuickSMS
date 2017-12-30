@@ -23,8 +23,8 @@ android {
         applicationId "com.hexrain.design.quicksms"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.9b"
+        versionCode 2
+        versionName "1.0"
     }
     lintOptions {
         abortOnError false
