@@ -20,9 +20,9 @@ import com.hexrain.design.quicksms.helpers.Crypter;
 import com.hexrain.design.quicksms.helpers.Database;
 import com.hexrain.design.quicksms.helpers.TemplateItem;
 
-public class CreateEdit extends AppCompatActivity {
+public class CreateEditActivity extends AppCompatActivity {
 
-    private ColorSetter cSetter = new ColorSetter(CreateEdit.this);
+    private ColorSetter cSetter = new ColorSetter(CreateEditActivity.this);
     private EditText editText;
     private TextView textView2;
 
@@ -91,7 +91,7 @@ public class CreateEdit extends AppCompatActivity {
 
         hideKeyboard();
         String temp = new Crypter().encrypt(text);
-        Database db = new Database(CreateEdit.this);
+        Database db = new Database(CreateEditActivity.this);
         db.open();
         if (mItem != null) {
             mItem.setMessage(temp);
@@ -101,7 +101,7 @@ public class CreateEdit extends AppCompatActivity {
         }
         db.saveTemplate(mItem);
         db.close();
-        Toast.makeText(CreateEdit.this, getString(R.string.string_saved), Toast.LENGTH_SHORT).show();
+        Toast.makeText(CreateEditActivity.this, getString(R.string.string_saved), Toast.LENGTH_SHORT).show();
         finish();
     }
 

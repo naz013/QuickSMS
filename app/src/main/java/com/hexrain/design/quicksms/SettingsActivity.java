@@ -106,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         TextView thanks = findViewById(R.id.thanks);
         thanks.setOnClickListener(v -> startActivity(new Intent(SettingsActivity.this,
-                ThanksDialog.class)
+                ThanksDialogActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
 
         setUpRadio();

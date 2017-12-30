@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.hexrain.design.quicksms.CreateEdit;
+import com.hexrain.design.quicksms.CreateEditActivity;
 import com.hexrain.design.quicksms.R;
 import com.hexrain.design.quicksms.databinding.ListItemLayoutBinding;
 
@@ -77,6 +77,6 @@ public class CustomAdapter extends FilterableAdapter<TemplateItem, String, Custo
     }
 
     private void openTemplate(int position) {
-        mContext.startActivity(new Intent(mContext, CreateEdit.class).putExtra("id", getItem(position).getId()));
+        mContext.startActivity(new Intent(mContext, CreateEditActivity.class).putExtra("id", getItem(position).getId()));
     }
 }

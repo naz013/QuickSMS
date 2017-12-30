@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".QuickSMS"
+            android:name=".QuickSMSActivity"
             android:configChanges="keyboardHidden|orientation" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -32,7 +32,7 @@
         </activity>
 
         <activity
-            android:name=".CreateEdit">
+            android:name=".CreateEditActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -46,7 +46,7 @@
         </activity>
 
         <activity
-            android:name=".ThanksDialog"
+            android:name=".ThanksDialogActivity"
             android:configChanges="keyboardHidden|orientation|keyboard" android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

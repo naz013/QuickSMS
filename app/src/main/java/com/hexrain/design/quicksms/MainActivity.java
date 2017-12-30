@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
 
         mFab = findViewById(R.id.button_floating_action);
-        mFab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CreateEdit.class)));
+        mFab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CreateEditActivity.class)));
 
         check = findViewById(R.id.check);
         check.setVisibility(View.GONE);

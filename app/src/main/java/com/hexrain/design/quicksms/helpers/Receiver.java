@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.hexrain.design.quicksms.QuickSMS;
+import com.hexrain.design.quicksms.QuickSMSActivity;
 
 public class Receiver extends BroadcastReceiver {
     private Context mContext;
@@ -50,7 +50,7 @@ public class Receiver extends BroadcastReceiver {
                             //rejected call
                             //Show quick SMS sending window
                             if (incoming_nr != null && prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) {
-                                mContext.startActivity(new Intent(mContext, QuickSMS.class)
+                                mContext.startActivity(new Intent(mContext, QuickSMSActivity.class)
                                         .putExtra(Constants.ITEM_ID_INTENT, incoming_nr).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                 break;
                             }

@@ -11,12 +11,12 @@ import android.widget.EditText;
 
 import com.hexrain.design.quicksms.helpers.ColorSetter;
 
-public class ThanksDialog extends AppCompatActivity {
+public class ThanksDialogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ColorSetter cSetter = new ColorSetter(ThanksDialog.this);
+        ColorSetter cSetter = new ColorSetter(ThanksDialogActivity.this);
         setTheme(cSetter.getStyle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(cSetter.colorStatus());

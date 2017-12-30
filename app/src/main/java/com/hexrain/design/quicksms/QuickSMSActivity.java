@@ -30,7 +30,7 @@ import com.hexrain.design.quicksms.helpers.Database;
 import com.hexrain.design.quicksms.helpers.QuickAdapter;
 import com.hexrain.design.quicksms.helpers.TemplateItem;
 
-public class QuickSMS extends Activity {
+public class QuickSMSActivity extends Activity {
 
     private TextView buttonSend;
     private RecyclerView messagesList;
@@ -39,7 +39,7 @@ public class QuickSMS extends Activity {
     private LinearLayout customContainer;
 
     private String number;
-    private ColorSetter cs = new ColorSetter(QuickSMS.this);
+    private ColorSetter cs = new ColorSetter(QuickSMSActivity.this);
     private QuickAdapter quickAdapter;
 
     @Override
@@ -88,7 +88,7 @@ public class QuickSMS extends Activity {
         buttonSend.setOnClickListener(v -> sendMessage());
         buttonSend.setTypeface(typeface);
 
-        String name = Contacts.getContactNameFromNumber(QuickSMS.this, number);
+        String name = Contacts.getContactNameFromNumber(QuickSMSActivity.this, number);
 
         TextView contactInfo = findViewById(R.id.contactInfo);
         contactInfo.setTypeface(typeface);
@@ -100,7 +100,7 @@ public class QuickSMS extends Activity {
     private void sendMessage() {
         if (quickAdapter.getItemCount() == 0) {
             text.setChecked(true);
-            Toast.makeText(QuickSMS.this, getString(R.string.empty_list_warming),
+            Toast.makeText(QuickSMSActivity.this, getString(R.string.empty_list_warming),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -120,7 +120,7 @@ public class QuickSMS extends Activity {
     private void loadTemplates(){
         Database db = new Database(this);
         db.open();
-        quickAdapter = new QuickAdapter(db.getItems(), QuickSMS.this);
+        quickAdapter = new QuickAdapter(db.getItems(), QuickSMSActivity.this);
         db.close();
         messagesList.setAdapter(quickAdapter);
         if (quickAdapter.getItemCount() == 0) text.setChecked(true);
@@ -137,10 +137,10 @@ public class QuickSMS extends Activity {
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
 
-        PendingIntent sentPI = PendingIntent.getBroadcast(QuickSMS.this, 0,
+        PendingIntent sentPI = PendingIntent.getBroadcast(QuickSMSActivity.this, 0,
                 new Intent(SENT), 0);
 
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(QuickSMS.this,
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(QuickSMSActivity.this,
                 0, new Intent(DELIVERED), 0);
 
         registerReceiver(new BroadcastReceiver() {
@@ -175,11 +175,11 @@ public class QuickSMS extends Activity {
             public void onReceive(Context arg0, Intent arg1) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(QuickSMS.this, "SMS delivered",
+                        Toast.makeText(QuickSMSActivity.this, "SMS delivered",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(QuickSMS.this, "SMS not delivered",
+                        Toast.makeText(QuickSMSActivity.this, "SMS not delivered",
                                 Toast.LENGTH_SHORT).show();
                         break;
                 }
