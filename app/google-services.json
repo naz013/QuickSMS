@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:556100491141:android:752460cc9a25e839",
+        "mobilesdk_app_id": "1:556100491141:android:ed9be83f2c172ab9",
         "android_client_info": {
-          "package_name": "com.hexrain.design.quicksms.debug"
+          "package_name": "com.hexrain.design.quicksms"
         }
       },
       "oauth_client": [
         {
-          "client_id": "556100491141-lvbm2ul520cs3lon9i4l9gr0ijjhntcs.apps.googleusercontent.com",
+          "client_id": "556100491141-l3fgcl7g7rr86g2969senaalhqji134v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hexrain.design.quicksms.debug",
-            "certificate_hash": "72773bd49d8a690b87fa39483c44ee176cce9b38"
+            "package_name": "com.hexrain.design.quicksms",
+            "certificate_hash": "6063a3e936d7f3fadf71eda0812dd90a36d1a794"
           }
         },
         {
