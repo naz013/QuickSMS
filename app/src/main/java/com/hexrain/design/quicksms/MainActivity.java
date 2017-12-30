@@ -16,10 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.hexrain.design.quicksms.helpers.ColorSetter;
 import com.hexrain.design.quicksms.helpers.Constants;
 import com.hexrain.design.quicksms.helpers.CustomAdapter;
@@ -29,6 +29,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 
 import java.io.File;
 
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setTheme(cSetter.getStyle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(cSetter.colorStatus());
