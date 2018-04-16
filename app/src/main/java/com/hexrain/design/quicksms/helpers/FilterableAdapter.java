@@ -23,8 +23,8 @@ import java.util.List;
  */
 public abstract class FilterableAdapter<V, Q, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    private List<V> originalData = new ArrayList<>();
-    private List<V> usedData = new ArrayList<>();
+    private List<V> originalData;
+    private List<V> usedData;
     @Nullable
     private Filter<V, Q> filter;
     private Q lastQuery;

@@ -22,18 +22,20 @@ public class CustomAdapter extends FilterableAdapter<TemplateItem, String, Custo
     @NonNull
     private Context mContext;
 
-    public CustomAdapter(@NonNull Context mContext, @NonNull List<TemplateItem> mDataList, @Nullable Filter<TemplateItem, String> filter) {
+    public CustomAdapter(@NonNull Context mContext, @NonNull List<TemplateItem> mDataList,
+                         @Nullable Filter<TemplateItem, String> filter) {
         super(mDataList, filter);
         this.mContext = mContext;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(ListItemLayoutBinding.inflate(LayoutInflater.from(mContext), parent, false).getRoot());
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.binding.messageView.setText(Crypter.decrypt(getItem(position).getMessage()));
     }
 
@@ -44,11 +46,13 @@ public class CustomAdapter extends FilterableAdapter<TemplateItem, String, Custo
         ViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            binding.getRoot().setOnClickListener(view -> openTemplate(getAdapterPosition()));
-            binding.getRoot().setOnLongClickListener(view -> {
-                showMenu(getAdapterPosition());
-                return true;
-            });
+            if (binding != null) {
+                binding.getRoot().setOnClickListener(view -> openTemplate(getAdapterPosition()));
+                binding.getRoot().setOnLongClickListener(view -> {
+                    showMenu(getAdapterPosition());
+                    return true;
+                });
+            }
         }
     }
 

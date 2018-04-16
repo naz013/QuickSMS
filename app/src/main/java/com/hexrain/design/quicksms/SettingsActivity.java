@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,14 +31,16 @@ public class SettingsActivity extends AppCompatActivity {
             deepPurple, indigoCheckbox, limeCheckbox, deepOrange;
     private RadioGroup themeGroup, themeGroup2, themeGroup3, themeGroupPro;
 
-    private ColorSetter cSetter = new ColorSetter(SettingsActivity.this);
-    private SharedPrefs prefs = new SharedPrefs(SettingsActivity.this);
+    @Nullable
+    private SharedPrefs mPrefs;
 
     private boolean runned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ColorSetter cSetter = new ColorSetter(SettingsActivity.this);
+        mPrefs = new SharedPrefs(SettingsActivity.this);
         setTheme(cSetter.getStyle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(cSetter.colorStatus());
@@ -46,8 +49,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowCustomEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowCustomEnabled(false);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
 
         getSupportActionBar().setTitle(R.string.title_activity_settings);
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
@@ -67,13 +72,13 @@ public class SettingsActivity extends AppCompatActivity {
         enable.setOnClickListener(v -> enableChange());
 
         enableCheck = findViewById(R.id.enableCheck);
-        enableCheck.setChecked(prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS));
+        enableCheck.setChecked(mPrefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS));
 
         RelativeLayout dark = findViewById(R.id.dark);
         dark.setOnClickListener(v -> darkChange());
 
         darkCheck = findViewById(R.id.darkCheck);
-        darkCheck.setChecked(prefs.loadBoolean(Constants.PREFERENCES_USE_DARK_THEME));
+        darkCheck.setChecked(mPrefs.loadBoolean(Constants.PREFERENCES_USE_DARK_THEME));
 
         red_checkbox = findViewById(R.id.red_checkbox);
         violet_checkbox = findViewById(R.id.violet_checkbox);
@@ -185,7 +190,7 @@ public class SettingsActivity extends AppCompatActivity {
     };
 
     public void setUpRadio() {
-        String loaded = prefs.loadPrefs(Constants.PREFERENCES_THEME);
+        String loaded = mPrefs != null ? mPrefs.loadPrefs(Constants.PREFERENCES_THEME) : "1";
         switch (loaded) {
             case "1":
                 red_checkbox.setChecked(true);
@@ -297,31 +302,31 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     void saveColor(String string) {
-        prefs = new SharedPrefs(SettingsActivity.this);
-        prefs.savePrefs(Constants.PREFERENCES_THEME, string);
+        mPrefs = new SharedPrefs(SettingsActivity.this);
+        mPrefs.savePrefs(Constants.PREFERENCES_THEME, string);
         if (runned) recreate();
     }
 
     private void enableChange() {
         if (enableCheck.isChecked()) {
-            prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, false);
+            if (mPrefs != null) mPrefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, false);
             enableCheck.setChecked(false);
         } else {
             if (!checkPermissions()) {
                 askPermissions();
                 return;
             }
-            prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
+            if (mPrefs != null) mPrefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
             enableCheck.setChecked(true);
         }
     }
 
     private void darkChange() {
         if (darkCheck.isChecked()) {
-            prefs.saveBoolean(Constants.PREFERENCES_USE_DARK_THEME, false);
+            if (mPrefs != null) mPrefs.saveBoolean(Constants.PREFERENCES_USE_DARK_THEME, false);
             darkCheck.setChecked(false);
         } else {
-            prefs.saveBoolean(Constants.PREFERENCES_USE_DARK_THEME, true);
+            if (mPrefs != null) mPrefs.saveBoolean(Constants.PREFERENCES_USE_DARK_THEME, true);
             darkCheck.setChecked(true);
         }
         recreate();

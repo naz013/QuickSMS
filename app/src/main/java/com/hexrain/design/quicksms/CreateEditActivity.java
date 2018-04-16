@@ -22,7 +22,8 @@ import com.hexrain.design.quicksms.helpers.TemplateItem;
 
 public class CreateEditActivity extends AppCompatActivity {
 
-    private ColorSetter cSetter = new ColorSetter(CreateEditActivity.this);
+    @Nullable
+    private ColorSetter cSetter;
     private EditText editText;
     private TextView textView2;
 
@@ -32,6 +33,7 @@ public class CreateEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cSetter = new ColorSetter(CreateEditActivity.this);
         setTheme(cSetter.getStyle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(cSetter.colorStatus());
@@ -40,8 +42,10 @@ public class CreateEditActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.string_add_template);
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.string_add_template);
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+        }
 
         findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
 
@@ -77,7 +81,7 @@ public class CreateEditActivity extends AppCompatActivity {
         });
 
         if (mItem != null) {
-            editText.setText(new Crypter().decrypt(mItem.getMessage()));
+            editText.setText(Crypter.decrypt(mItem.getMessage()));
             getSupportActionBar().setTitle(getString(R.string.string_edit_template));
         }
     }
@@ -90,7 +94,7 @@ public class CreateEditActivity extends AppCompatActivity {
         }
 
         hideKeyboard();
-        String temp = new Crypter().encrypt(text);
+        String temp = Crypter.encrypt(text);
         Database db = new Database(CreateEditActivity.this);
         db.open();
         if (mItem != null) {

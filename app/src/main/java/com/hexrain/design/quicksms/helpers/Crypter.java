@@ -1,12 +1,15 @@
 package com.hexrain.design.quicksms.helpers;
 
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 
 public class Crypter {
 
-    public static String decrypt(String string){
+    @Nullable
+    public static String decrypt(@Nullable String string) {
+        if (string == null) return null;
         String result = "";
         byte[] byte_string = Base64.decode(string, Base64.DEFAULT);
         try {
@@ -17,7 +20,9 @@ public class Crypter {
         return result;
     }
 
-    public static String encrypt(String string){
+    @Nullable
+    public static String encrypt(@Nullable String string) {
+        if (string == null) return null;
         byte[] string_byted = null;
         try {
             string_byted = string.getBytes("UTF-8");

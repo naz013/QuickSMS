@@ -2,6 +2,7 @@ package com.hexrain.design.quicksms.helpers;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +21,20 @@ public class QuickAdapter extends RecyclerView.Adapter<QuickAdapter.ViewHolder> 
     private ColorSetter themeUtil;
 
     public QuickAdapter(List<TemplateItem> mDataList, Context context) {
-        this.mDataList = mDataList;
+        this.mDataList.clear();
+        this.mDataList.addAll(mDataList);
         this.mContext = context;
         themeUtil = new ColorSetter(context);
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(ListItemLayoutBinding.inflate(LayoutInflater.from(mContext), parent, false).getRoot());
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final TemplateItem item = mDataList.get(position);
         holder.binding.messageView.setText(Crypter.decrypt(item.getMessage()));
         if (item.isSelected()) {
@@ -53,7 +56,9 @@ public class QuickAdapter extends RecyclerView.Adapter<QuickAdapter.ViewHolder> 
         ViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            binding.getRoot().setOnClickListener(view -> selectItem(getAdapterPosition()));
+            if (binding != null) {
+                binding.getRoot().setOnClickListener(view -> selectItem(getAdapterPosition()));
+            }
         }
     }
 
@@ -65,7 +70,7 @@ public class QuickAdapter extends RecyclerView.Adapter<QuickAdapter.ViewHolder> 
         return mDataList.get(position);
     }
 
-    void selectItem(int position) {
+    private void selectItem(int position) {
         if (position == selectedPosition) return;
         if (selectedPosition != -1 && selectedPosition < mDataList.size()) {
             mDataList.get(selectedPosition).setSelected(false);

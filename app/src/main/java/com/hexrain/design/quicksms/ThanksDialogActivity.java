@@ -25,8 +25,10 @@ public class ThanksDialogActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.string_open_source));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle(getString(R.string.string_open_source));
+        }
 
         WebView helpView = findViewById(R.id.helpView);
         String url = "file:///android_asset/LICENSE.html";

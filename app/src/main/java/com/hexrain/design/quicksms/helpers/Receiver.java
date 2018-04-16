@@ -16,7 +16,7 @@ public class Receiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        TelephonyManager telephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE); //TelephonyManager object
+        TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE); //TelephonyManager object
         CustomPhoneStateListener customPhoneListener = new CustomPhoneStateListener();
         if (telephony != null) {
             telephony.listen(customPhoneListener, PhoneStateListener.LISTEN_CALL_STATE); //Register our listener with TelephonyManager
@@ -28,12 +28,12 @@ public class Receiver extends BroadcastReceiver {
     public class CustomPhoneStateListener extends PhoneStateListener {
 
         @Override
-        public void onCallStateChanged(int state, String incomingNumber){
+        public void onCallStateChanged(int state, String incomingNumber) {
             SharedPrefs prefs = new SharedPrefs(mContext);
 
-            if(incomingNumber != null && incomingNumber.length() > 0) incoming_nr = incomingNumber;
+            if (incomingNumber != null && incomingNumber.length() > 0) incoming_nr = incomingNumber;
 
-            switch(state){
+            switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
                     prev_state = state;
                     startCallTime = System.currentTimeMillis();
@@ -42,11 +42,11 @@ public class Receiver extends BroadcastReceiver {
                     prev_state = state;
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                    if((prev_state == TelephonyManager.CALL_STATE_RINGING)){
+                    if ((prev_state == TelephonyManager.CALL_STATE_RINGING)) {
                         prev_state = state;
                         //Rejected or Missed call
                         long currTime = System.currentTimeMillis();
-                        if (currTime - startCallTime <= 1000 * 15){
+                        if (currTime - startCallTime <= 1000 * 15) {
                             //rejected call
                             //Show quick SMS sending window
                             if (incoming_nr != null && prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) {

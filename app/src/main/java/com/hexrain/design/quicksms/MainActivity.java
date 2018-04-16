@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -40,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_PERM = 1236;
 
     private Toolbar toolbar;
-    private ColorSetter cSetter = new ColorSetter(MainActivity.this);
-    private SharedPrefs prefs = new SharedPrefs(MainActivity.this);
+    @Nullable
+    private ColorSetter mColorTool;
+    @Nullable
+    private SharedPrefs mPrefs;
     private CheckBox check;
     private RecyclerView listView;
     private FloatingActionButton mFab;
@@ -52,10 +55,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mColorTool = new ColorSetter(MainActivity.this);
+        mPrefs = new SharedPrefs(MainActivity.this);
         Fabric.with(this, new Crashlytics());
-        setTheme(cSetter.getStyle());
+        setTheme(mColorTool.getStyle());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(cSetter.colorStatus());
+            getWindow().setStatusBarColor(mColorTool.colorStatus());
         }
         setContentView(R.layout.activity_main);
 
@@ -73,22 +78,19 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+        }
 
-        findViewById(R.id.background).setBackgroundColor(cSetter.getBackgroundStyle());
+        findViewById(R.id.background).setBackgroundColor(mColorTool.getBackgroundStyle());
 
         mFab = findViewById(R.id.button_floating_action);
         mFab.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CreateEditActivity.class)));
 
         check = findViewById(R.id.check);
         check.setVisibility(View.GONE);
-        check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkClick();
-            }
-        });
+        check.setOnClickListener(v -> checkClick());
 
         textView3 = findViewById(R.id.textView3);
         textView3.setVisibility(View.VISIBLE);
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (!prefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) check.setVisibility(View.VISIBLE);
+        if (!mPrefs.loadBoolean(Constants.PREFERENCES_QUICK_SMS)) check.setVisibility(View.VISIBLE);
     }
 
     private void checkClick() {
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             askPermissions();
             return;
         }
-        prefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
+        if (mPrefs != null) mPrefs.saveBoolean(Constants.PREFERENCES_QUICK_SMS, true);
         check.setVisibility(View.GONE);
     }
 
@@ -138,9 +140,10 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton(R.string.button_never, (dialogInterface, i) -> dialogInterface.dismiss());
         builder.setNeutralButton(R.string.button_later, (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            SharedPrefs sPrefs = new SharedPrefs(MainActivity.this);
-            sPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
-            sPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
+            if (mPrefs != null) {
+                mPrefs.saveBoolean(Constants.PREFERENCES_RATE_SHOWN, false);
+                mPrefs.saveInt(Constants.PREFERENCES_APP_RUNS, 0);
+            }
         });
         builder.create().show();
     }
@@ -217,13 +220,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         showRate();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(cSetter.colorStatus());
-        }
+        if (mColorTool != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(mColorTool.colorStatus());
+            }
 
-        toolbar.setBackgroundColor(cSetter.colorSetter());
-        mFab.setBackgroundColor(cSetter.colorSetter());
-        mFab.setRippleColor(cSetter.colorStatus());
+            toolbar.setBackgroundColor(mColorTool.colorSetter());
+            mFab.setBackgroundColor(mColorTool.colorSetter());
+            mFab.setRippleColor(mColorTool.colorStatus());
+        }
 
         String action = getIntent().getAction();
         if (action == null || !action.equals("JustActivity Created")) {

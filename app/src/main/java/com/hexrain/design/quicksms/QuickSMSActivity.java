@@ -44,12 +44,12 @@ public class QuickSMSActivity extends Activity {
     private LinearLayout customContainer;
 
     private String number;
-    private ColorSetter cs = new ColorSetter(QuickSMSActivity.this);
     private QuickAdapter quickAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ColorSetter cs = new ColorSetter(QuickSMSActivity.this);
         setTheme(cs.getFullscreenStyle());
         runOnUiThread(() -> getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
@@ -74,12 +74,12 @@ public class QuickSMSActivity extends Activity {
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.template){
+            if (checkedId == R.id.template) {
                 customContainer.setVisibility(View.GONE);
                 messagesList.setVisibility(View.VISIBLE);
             }
 
-            if (checkedId == R.id.text){
+            if (checkedId == R.id.text) {
                 messagesList.setVisibility(View.GONE);
                 customContainer.setVisibility(View.VISIBLE);
             }
@@ -119,14 +119,14 @@ public class QuickSMSActivity extends Activity {
             String message = Crypter.decrypt(item.getMessage());
             sendSMS(number, message);
         }
-        if (text.isChecked()){
+        if (text.isChecked()) {
             String message = textField.getText().toString().trim();
             if (message.matches("")) return;
             sendSMS(number, message);
         }
     }
 
-    private void loadTemplates(){
+    private void loadTemplates() {
         Database db = new Database(this);
         db.open();
         quickAdapter = new QuickAdapter(db.getItems(), QuickSMSActivity.this);
@@ -135,14 +135,14 @@ public class QuickSMSActivity extends Activity {
         if (quickAdapter.getItemCount() == 0) text.setChecked(true);
     }
 
-    public void removeFlags(){
+    public void removeFlags() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     }
 
-    private void sendSMS(String number, String message){
+    private void sendSMS(String number, String message) {
         String SENT = "SMS_SENT";
         String DELIVERED = "SMS_DELIVERED";
 
