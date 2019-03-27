@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Quick SMS</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="rate_text">Wil je deze app beoordelen?</string>
+    <string name="button_never">Nooit</string>
+    <string name="button_later">Later</string>
+    <string name="button_rate">Beoordelen</string>
+    <string name="atring_rate">App beoordelen</string>
+    <string name="string_exit">Afsluiten</string>
+    <string name="string_more_applications">Meer apps</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="string_message">Bericht</string>
+    <string name="string_version">Versie</string>
+    <string name="string_retry">Opnieuw</string>
+    <string name="string_saved">Opgeslagen</string>
+    <string name="string_add_template">Sjabloon toevoegen</string>
+    <string name="string_edit_template">Sjabloon bewerken</string>
+    <string name="string_deleted">Verwijderd</string>
+    <string name="string_characters_left">Aantal resterende tekens</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="settings_enable_quick_sms">Quick SMS inschakelen</string>
+    <string name="string_send_feedback">Feedback versturen</string>
+    <string name="string_user_interface">Uiterlijk</string>
+    <string name="string_other">Overig</string>
+    <string name="string_dark_theme">Donker thema</string>
+    <string name="empty_list_message">Je hebt nog geen sms-sjablonen ingesteld. Druk op de \'plus'\-knop om een sjabloon toe te voegen.</string>
+    <string name="string_type_message">Typ een bericht</string>
+    <string name="string_template">Sjabloon</string>
+    <string name="string_open_source">Opensourcesoftware</string>
+    <string name="empty_warming">Mag niet blanco zijn!</string>
+    <string name="empty_list_warming">Je hebt geen sjablonen. Typ een te versturen bericht.</string>
+    <string name="string_send">Versturen</string>
+    <string name="delete">Verwijderen</string>
+    <string name="cant_launch_market">Kan Play Store niet openen</string>
+</resources>
